@@ -54,7 +54,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
     }
   };
   
-  const COLORS = ['#6366f1', '#8b5cf6', '#d946ef', '#ec4899', '#f43f5e', '#f59e0b', '#10b981', '#06b6d4'];
+  const COLORS = ['#8b5cf6', '#a78bfa', '#c4b5fd', '#22d3ee', '#67e8f9', '#f472b6', '#fb7185', '#f59e0b'];
 
   return (
     <div className="max-w-7xl mx-auto px-6 pb-24 pt-10">
@@ -62,17 +62,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
       {/* Navbar */}
       <div className="flex justify-between items-center mb-12 animate-in">
         <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl">
+            <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-cyan-400 shadow-lg backdrop-blur-md">
                 <span className="font-black text-xl">V.</span>
             </div>
             <div>
-                <h1 className="text-xl font-bold text-slate-900 leading-none">VocabMaster</h1>
-                <p className="text-xs font-medium text-slate-500 mt-1">{user.email}</p>
+                <h1 className="text-xl font-bold text-white leading-none">VocabMaster</h1>
+                <p className="text-xs font-medium text-slate-400 mt-1 flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+                    {user.email}
+                </p>
             </div>
         </div>
         <button 
             onClick={onLogout}
-            className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:border-rose-200 transition-colors shadow-sm"
+            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
         >
             <LogOut className="w-4 h-4" />
         </button>
@@ -85,48 +88,50 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             
             {/* Stats Overview */}
             <div className="grid grid-cols-2 gap-4">
-                <div className="abstract-card p-6 rounded-[2rem] animate-in delay-100 flex flex-col justify-between h-40">
-                    <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+                <div className="glass-card p-6 rounded-[2rem] animate-in delay-100 flex flex-col justify-between h-40 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 w-16 h-16 bg-violet-500/20 rounded-full blur-2xl -mr-6 -mt-6 group-hover:bg-violet-500/30 transition-all"></div>
+                    <div className="w-10 h-10 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
                         <TrendingUp className="w-5 h-5" />
                     </div>
                     <div>
-                        <span className="text-4xl font-black text-slate-800">{overallAccuracy}%</span>
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Accuracy</p>
+                        <span className="text-4xl font-black text-white">{overallAccuracy}%</span>
+                        <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-1">Accuracy</p>
                     </div>
                 </div>
-                <div className="abstract-card p-6 rounded-[2rem] animate-in delay-200 flex flex-col justify-between h-40">
-                    <div className="w-10 h-10 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
+                <div className="glass-card p-6 rounded-[2rem] animate-in delay-200 flex flex-col justify-between h-40 relative overflow-hidden group">
+                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-cyan-500/20 rounded-full blur-2xl -ml-6 -mb-6 group-hover:bg-cyan-500/30 transition-all"></div>
+                    <div className="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                         <Award className="w-5 h-5" />
                     </div>
                     <div>
-                        <span className="text-4xl font-black text-slate-800">{stats.masteredWords.length}</span>
-                        <p className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-1">Mastered</p>
+                        <span className="text-4xl font-black text-white">{stats.masteredWords.length}</span>
+                        <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-1">Mastered</p>
                     </div>
                 </div>
             </div>
 
             {/* Difficulty Selector */}
-            <div className="abstract-card p-6 rounded-[2rem] animate-in delay-300">
+            <div className="glass-card p-6 rounded-[2rem] animate-in delay-300">
                 <div className="flex items-center gap-2 mb-6">
-                    <Target className="w-5 h-5 text-slate-400" />
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Select Intensity</span>
+                    <Target className="w-5 h-5 text-cyan-400" />
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Select Protocol</span>
                 </div>
                 <div className="space-y-2">
                     {Object.values(Difficulty).map((diff) => (
                     <button
                         key={diff}
                         onClick={() => setSelectedDifficulty(diff)}
-                        className={`w-full p-4 rounded-xl text-left transition-all duration-300 flex items-center justify-between group border-2 ${
+                        className={`w-full p-4 rounded-xl text-left transition-all duration-300 flex items-center justify-between group border ${
                         selectedDifficulty === diff 
-                        ? 'bg-slate-900 border-slate-900 text-white shadow-lg scale-[1.02]' 
-                        : 'bg-white border-transparent hover:border-slate-200 text-slate-500'
+                        ? 'bg-violet-600/20 border-violet-500/50 text-white shadow-[0_0_15px_rgba(139,92,246,0.2)]' 
+                        : 'bg-white/5 border-white/5 hover:bg-white/10 text-slate-400'
                         }`}
                     >
                         <div>
                             <span className="font-bold text-sm block">{diff.split(' ')[0]}</span>
-                            {diff.includes('CET') && <span className="text-[10px] opacity-70">CET Exam Standard</span>}
+                            {diff.includes('CET') && <span className="text-[10px] text-cyan-400 font-mono">CET Standard</span>}
                         </div>
-                        {selectedDifficulty === diff && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />}
+                        {selectedDifficulty === diff && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 animate-scale-in" />}
                     </button>
                     ))}
                 </div>
@@ -134,11 +139,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             
             <button 
                 onClick={() => {
-                    if(confirm('Reset all progress?')) clearData(user.email);
+                    if(confirm('Purge all mission data?')) clearData(user.email);
                 }}
-                className="w-full py-4 text-xs font-bold text-slate-400 hover:text-rose-500 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-4 text-xs font-bold text-slate-600 hover:text-red-400 hover:bg-red-900/10 rounded-xl transition-all flex items-center justify-center gap-2"
             >
-                <Trash2 className="w-4 h-4" /> Reset All Data
+                <Trash2 className="w-4 h-4" /> Reset System
             </button>
 
         </div>
@@ -147,26 +152,29 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
         <div className="lg:col-span-8 space-y-8">
             
             {/* Chart */}
-            <div className="abstract-card p-8 rounded-[2rem] animate-in delay-300">
+            <div className="glass-card p-8 rounded-[2rem] animate-in delay-300">
                 <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold text-slate-800 text-lg">Performance Curve</h3>
-                    <div className="flex gap-2">
-                        {/* Legend or controls could go here */}
-                    </div>
+                    <h3 className="font-bold text-white text-lg flex items-center gap-2">
+                        <Sparkles className="w-4 h-4 text-violet-400" /> Performance Metrics
+                    </h3>
                 </div>
                 <div className="h-48 w-full">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={catStats} barSize={32}>
                         <XAxis dataKey="category" hide />
                         <Tooltip 
-                            cursor={{fill: '#f1f5f9'}}
+                            cursor={{fill: 'rgba(255, 255, 255, 0.05)'}}
                             contentStyle={{ 
                                 borderRadius: '16px', 
-                                border: 'none', 
-                                boxShadow: '0 10px 30px -5px rgba(0,0,0,0.1)',
+                                border: '1px solid rgba(255,255,255,0.1)', 
+                                backgroundColor: 'rgba(2, 6, 23, 0.9)',
+                                boxShadow: '0 10px 30px -5px rgba(0,0,0,0.5)',
                                 padding: '12px',
-                                fontFamily: 'Outfit'
+                                fontFamily: 'Outfit',
+                                color: '#fff'
                             }}
+                            itemStyle={{ color: '#fff' }}
+                            labelStyle={{ color: '#94a3b8' }}
                         />
                         <Bar dataKey="accuracy" radius={[8, 8, 8, 8]}>
                             {catStats.map((_, index) => (
@@ -181,8 +189,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             {/* Categories Grid */}
             <div>
                 <div className="flex items-center gap-2 mb-6 px-2">
-                     <Layers className="w-5 h-5 text-slate-400" />
-                     <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Training Modules</span>
+                     <Layers className="w-5 h-5 text-slate-500" />
+                     <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Training Modules</span>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {Object.values(QuizCategory).map((category, idx) => {
@@ -193,16 +201,16 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                             <button
                                 key={category}
                                 onClick={() => onStartQuiz(category, selectedDifficulty)}
-                                className="abstract-card p-5 rounded-[1.5rem] text-left transition-all hover:bg-white flex flex-col justify-between h-40 group animate-in"
+                                className="glass-card p-5 rounded-[1.5rem] text-left transition-all hover:-translate-y-1 flex flex-col justify-between h-40 group animate-in"
                                 style={{ animationDelay: `${400 + (idx * 50)}ms` }}
                             >
-                                <div className="w-12 h-12 rounded-2xl bg-white border border-slate-100 flex items-center justify-center text-slate-400 group-hover:text-indigo-600 group-hover:scale-110 transition-all shadow-sm">
+                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all">
                                     {getCategoryIcon(category)}
                                 </div>
                                 
                                 <div>
-                                    <h4 className="font-bold text-slate-800 text-sm leading-tight mb-1">{category}</h4>
-                                    <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                                    <h4 className="font-bold text-slate-200 text-sm leading-tight mb-1 group-hover:text-white transition-colors">{category}</h4>
+                                    <span className="text-[10px] font-semibold text-slate-500 bg-white/5 px-2 py-0.5 rounded-full group-hover:text-cyan-400 transition-colors">
                                         {attempts} runs
                                     </span>
                                 </div>

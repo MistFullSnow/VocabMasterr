@@ -20,21 +20,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({
   hintRevealed
 }) => {
   
-  // Highlight Logic: Finds the target word and wraps it in a styled span
+  // Highlight Logic: Finds the target word and wraps it in a glowing styled span for Dark Mode
   const renderQuestionText = () => {
     if (!question.targetWord) return question.questionText;
 
-    // Use regex to find the word, case insensitive, preserving the original casing in the text
     const parts = question.questionText.split(new RegExp(`(${question.targetWord})`, 'gi'));
     
     return parts.map((part, i) => 
         part.toLowerCase() === question.targetWord.toLowerCase() ? (
             <span key={i} className="relative inline-block px-1 mx-0.5">
-                <span className="absolute inset-0 bg-indigo-100 -skew-y-2 rounded-lg -z-10"></span>
-                <span className="font-extrabold text-indigo-900">{part}</span>
+                {/* Glow effect */}
+                <span className="absolute inset-0 bg-violet-500/20 blur-md rounded-lg -z-10"></span>
+                <span className="font-extrabold text-violet-300 drop-shadow-[0_0_8px_rgba(167,139,250,0.5)] border-b-2 border-violet-500/50">{part}</span>
             </span>
         ) : (
-            <span key={i} className="font-normal">{part}</span>
+            <span key={i} className="font-normal text-slate-200">{part}</span>
         )
     );
   };
@@ -44,42 +44,42 @@ export const QuizCard: React.FC<QuizCardProps> = ({
 
     if (!isSubmitted) {
       return selectedOption === option
-        ? "bg-slate-900 text-white shadow-xl scale-[1.02] border-slate-900"
-        : "bg-white/50 border-white/60 hover:bg-white hover:border-slate-200 text-slate-600 hover:text-slate-900";
+        ? "bg-violet-600/20 border-violet-500/50 text-white shadow-[0_0_15px_rgba(139,92,246,0.2)]"
+        : "bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/20 text-slate-400 hover:text-white";
     }
 
     if (option === question.correctAnswer) {
-      return "bg-emerald-100 border-emerald-200 text-emerald-800 ring-1 ring-emerald-300";
+      return "bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.2)]";
     }
 
     if (selectedOption === option && option !== question.correctAnswer) {
-      return "bg-rose-50 border-rose-200 text-rose-800 ring-1 ring-rose-200";
+      return "bg-red-500/20 border-red-500/50 text-red-300";
     }
 
-    return "bg-slate-50 opacity-40 text-slate-400 border-transparent";
+    return "bg-white/5 opacity-20 text-slate-600 border-transparent";
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto animate-in"> 
       
       {/* Question Card */}
-      <div className="abstract-card p-8 rounded-[2.5rem] mb-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-6 opacity-10">
-            <Sparkles className="w-24 h-24 text-indigo-500" />
+      <div className="glass-card p-8 rounded-[2.5rem] mb-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-6 opacity-20">
+            <Sparkles className="w-24 h-24 text-violet-500" />
           </div>
 
           <div className="relative z-10">
-            <span className="inline-block px-3 py-1 bg-white/60 rounded-full text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4 border border-white">
+            <span className="inline-block px-3 py-1 bg-white/10 rounded-full text-[10px] font-bold uppercase tracking-widest text-cyan-400 mb-4 border border-white/5">
                 {question.type}
             </span>
-            <h3 className="text-2xl md:text-3xl font-medium text-slate-800 leading-normal mb-2">
+            <h3 className="text-2xl md:text-3xl font-medium leading-normal mb-2">
                 {renderQuestionText()}
             </h3>
           </div>
           
           {hintRevealed && (
-            <div className="mt-6 flex items-start gap-3 p-4 bg-amber-50/80 border border-amber-100 rounded-2xl text-amber-800 text-sm font-medium animate-in">
-                <Lightbulb className="w-5 h-5 flex-shrink-0 text-amber-500" />
+            <div className="mt-6 flex items-start gap-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl text-amber-200 text-sm font-medium animate-in backdrop-blur-md">
+                <Lightbulb className="w-5 h-5 flex-shrink-0 text-amber-400" />
                 <p>Hint: {question.hint}</p>
             </div>
           )}
@@ -99,10 +99,10 @@ export const QuizCard: React.FC<QuizCardProps> = ({
             
             {/* Status Icon */}
             {isSubmitted && option === question.correctAnswer && (
-                <div className="bg-emerald-200 p-1 rounded-full"><Check className="w-4 h-4 text-emerald-800" /></div>
+                <div className="bg-emerald-500/20 p-1 rounded-full"><Check className="w-4 h-4 text-emerald-400" /></div>
             )}
             {isSubmitted && selectedOption === option && option !== question.correctAnswer && (
-                <div className="bg-rose-200 p-1 rounded-full"><X className="w-4 h-4 text-rose-800" /></div>
+                <div className="bg-red-500/20 p-1 rounded-full"><X className="w-4 h-4 text-red-400" /></div>
             )}
           </button>
         ))}
@@ -110,9 +110,9 @@ export const QuizCard: React.FC<QuizCardProps> = ({
 
       {/* Explanation */}
       {isSubmitted && (
-        <div className="mt-6 p-6 rounded-3xl abstract-card animate-in border-t-4 border-t-indigo-500">
-            <h4 className="font-bold text-slate-900 mb-2">Analysis</h4>
-            <p className="text-slate-600 leading-relaxed">
+        <div className="mt-6 p-6 rounded-3xl glass-card animate-in border-t-4 border-t-violet-500">
+            <h4 className="font-bold text-white mb-2">Analysis</h4>
+            <p className="text-slate-300 leading-relaxed">
               {question.explanation}
             </p>
         </div>

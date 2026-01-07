@@ -159,9 +159,9 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   if (error) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center animate-in">
-        <div className="text-rose-500 mb-4 text-xl font-bold">Connection Error</div>
+        <div className="text-red-400 mb-4 text-xl font-bold">Signal Lost</div>
         <p className="text-slate-500 mb-6">{error}</p>
-        <button onClick={onExit} className="px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800">Return Home</button>
+        <button onClick={onExit} className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20">Abort Mission</button>
       </div>
     );
   }
@@ -170,18 +170,18 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
      return (
         <div className="min-h-screen flex items-center justify-center p-4 animate-in relative overflow-hidden">
              
-             <div className="abstract-card p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center relative z-10 animate-in">
+             <div className="glass-card p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center relative z-10 animate-in border border-violet-500/20">
                  
-                 <div className="w-24 h-24 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-white rotate-6 shadow-xl shadow-indigo-200">
+                 <div className="w-24 h-24 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-white rotate-6 shadow-[0_0_30px_rgba(139,92,246,0.4)]">
                     <CheckCircle2 className="w-12 h-12" />
                  </div>
 
-                 <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Session Complete</h2>
-                 <p className="text-slate-500 mb-8 font-medium">Your brain is getting stronger.</p>
+                 <h2 className="text-3xl font-black text-white mb-2 tracking-tight">Mission Complete</h2>
+                 <p className="text-slate-400 mb-8 font-medium">Neural pathways reinforced.</p>
                  
-                 <div className="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100">
-                     <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Total Score</div>
-                     <div className="text-5xl font-black text-indigo-600">
+                 <div className="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10">
+                     <div className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-1">Total Score</div>
+                     <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-cyan-400">
                          {sessionScore}
                      </div>
                  </div>
@@ -189,13 +189,13 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                  <div className="space-y-3">
                      <button 
                         onClick={loadQuestions}
-                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-white text-slate-900 rounded-xl font-bold hover:bg-cyan-50 active:scale-95 transition-all flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                      >
                         <RefreshCcw className="w-4 h-4" /> Go Again
                      </button>
                      <button 
                         onClick={onExit}
-                        className="w-full py-4 bg-transparent border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-transparent border border-white/10 text-slate-400 rounded-xl font-bold hover:bg-white/5 hover:text-white transition-colors flex items-center justify-center gap-2"
                      >
                         <Home className="w-4 h-4" /> Dashboard
                      </button>
@@ -208,33 +208,33 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
       {/* Top Bar */}
-      <div className="px-6 py-4 sticky top-0 z-20 flex justify-between items-center safe-area-pt backdrop-blur-md bg-white/30 border-b border-white/20">
+      <div className="px-6 py-4 sticky top-0 z-20 flex justify-between items-center safe-area-pt backdrop-blur-xl bg-slate-950/60 border-b border-white/5">
           <div className="flex items-center gap-4">
-            <button onClick={onExit} className="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors">
+            <button onClick={onExit} className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
                 <X className="w-5 h-5" />
             </button>
             <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{category}</span>
-                <span className="text-xs font-bold text-slate-900">{difficulty.split(' ')[0]} MODE</span>
+                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{category}</span>
+                <span className="text-xs font-bold text-cyan-400">{difficulty.split(' ')[0]} PROTOCOL</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100">
-                  <Zap className={`w-4 h-4 ${streak > 0 ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300'}`} />
-                  <span className="text-sm font-bold text-slate-700">{streak}</span>
+              <div className="flex items-center gap-1.5 bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/20">
+                  <Zap className={`w-4 h-4 ${streak > 0 ? 'text-yellow-400 fill-yellow-400' : 'text-slate-600'}`} />
+                  <span className={`text-sm font-bold ${streak > 0 ? 'text-yellow-400' : 'text-slate-600'}`}>{streak}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
-                  <span className="text-sm font-black text-slate-800 tracking-wide">{sessionScore} pts</span>
+              <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
+                  <span className="text-sm font-black text-white tracking-wide">{sessionScore} pts</span>
               </div>
           </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full h-1.5 bg-slate-100">
+      {/* Neon Progress Bar */}
+      <div className="w-full h-1 bg-slate-900">
           <div 
-            className={`h-full transition-all duration-100 ease-linear rounded-r-full ${
-                timeLeft > 60 ? 'bg-emerald-500' : timeLeft > 30 ? 'bg-amber-500' : 'bg-rose-500'
+            className={`h-full transition-all duration-100 ease-linear shadow-[0_0_10px_currentColor] ${
+                timeLeft > 60 ? 'bg-emerald-500 text-emerald-500' : timeLeft > 30 ? 'bg-amber-500 text-amber-500' : 'bg-red-500 text-red-500'
             }`} 
             style={{ width: `${timeLeft}%` }}
           ></div>
@@ -243,9 +243,9 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
       {/* Main Content */}
       <div className="flex-1 p-4 overflow-y-auto pb-32 flex flex-col justify-center">
         <div className="max-w-2xl mx-auto w-full">
-            <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest px-2">
-                <span>Question {currentIndex + 1} / {questions.length}</span>
-                <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> Speed Bonus Active</span>
+            <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-4 uppercase tracking-widest px-2">
+                <span>Seq {currentIndex + 1} / {questions.length}</span>
+                <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> Time Dilation Active</span>
             </div>
 
             {currentQ && (
@@ -272,10 +272,10 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                     <button 
                         onClick={handleFiftyFifty}
                         disabled={fiftyFiftyUsed}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-white border shadow-lg transition-all active:scale-95 ${
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border backdrop-blur-md transition-all active:scale-95 ${
                             fiftyFiftyUsed 
-                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-100 shadow-none' 
-                            : 'border-slate-100 text-slate-600 hover:text-indigo-600'
+                            ? 'bg-white/5 text-slate-600 border-white/5 cursor-not-allowed' 
+                            : 'bg-slate-900/60 border-white/20 text-indigo-300 hover:text-white hover:border-white/40'
                         }`}
                     >
                         <Divide className="w-4 h-4" /> 50/50
@@ -283,10 +283,10 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                     <button 
                         onClick={handleHint}
                         disabled={hintUsed}
-                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-white border shadow-lg transition-all active:scale-95 ${
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border backdrop-blur-md transition-all active:scale-95 ${
                             hintUsed 
-                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-100 shadow-none' 
-                            : 'border-slate-100 text-slate-600 hover:text-amber-600'
+                            ? 'bg-white/5 text-slate-600 border-white/5 cursor-not-allowed' 
+                            : 'bg-slate-900/60 border-white/20 text-amber-300 hover:text-white hover:border-white/40'
                         }`}
                     >
                         <HelpCircle className="w-4 h-4" /> Hint
@@ -295,22 +295,22 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
             )}
 
             {/* Action Button Container */}
-            <div className="abstract-card p-4 rounded-[1.5rem] border-t border-white/50 shadow-2xl">
+            <div className="glass-card p-4 rounded-[1.5rem] border-t border-white/10 shadow-2xl">
                 {isSubmitted ? (
                     <button
                         onClick={isLastQuestion ? handleFinish : handleNext}
-                        className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 animate-in ${
+                        className={`w-full py-4 rounded-xl font-bold text-white shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 animate-in ${
                             isLastQuestion 
-                            ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-200' 
-                            : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-200'
+                            ? 'bg-emerald-600 hover:bg-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.4)]' 
+                            : 'bg-violet-600 hover:bg-violet-500 shadow-[0_0_20px_rgba(139,92,246,0.4)]'
                         }`}
                     >
-                        {isLastQuestion ? 'Complete Session' : 'Next Question'}
+                        {isLastQuestion ? 'Complete Session' : 'Next Sequence'}
                         <ArrowRight className="w-5 h-5" />
                     </button>
                 ) : (
-                    <div className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest py-3 animate-pulse">
-                        Select an option to continue
+                    <div className="text-center text-slate-500 text-xs font-bold uppercase tracking-widest py-3 animate-pulse">
+                        Awaiting Input...
                     </div>
                 )}
             </div>
