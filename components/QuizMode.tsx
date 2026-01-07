@@ -19,31 +19,28 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
-  // Game State
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [sessionScore, setSessionScore] = useState(0);
   const [streak, setStreak] = useState(0);
   
-  // Lifelines
   const [hiddenOptions, setHiddenOptions] = useState<string[]>([]);
   const [hintUsed, setHintUsed] = useState(false);
   const [fiftyFiftyUsed, setFiftyFiftyUsed] = useState(false);
   
-  // Timer
-  const [timeLeft, setTimeLeft] = useState(100); // Percentage
+  const [timeLeft, setTimeLeft] = useState(100);
   const timerRef = useRef<number | null>(null);
+
+  const [showSummary, setShowSummary] = useState(false);
 
   const getTimerDuration = () => {
     switch(difficulty) {
       case Difficulty.EASY: return 45;
-      case Difficulty.MEDIUM: return 30; // CET Standard
+      case Difficulty.MEDIUM: return 30;
       case Difficulty.HARD: return 20;
       default: return 30;
     }
   };
-
-  const [showSummary, setShowSummary] = useState(false);
 
   const loadQuestions = useCallback(async () => {
     setLoading(true);
@@ -76,7 +73,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   const startTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     const duration = getTimerDuration();
-    const step = 100 / (duration * 10); // Update every 100ms
+    const step = 100 / (duration * 10);
     
     timerRef.current = window.setInterval(() => {
       setTimeLeft(prev => {
@@ -92,7 +89,6 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   const handleTimeUp = () => {
     setIsSubmitted(true);
-    // Auto-select nothing or mark as missed, handled by UI state
   };
 
   useEffect(() => {
@@ -110,7 +106,6 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
     const currentQ = questions[currentIndex];
     const isCorrect = option === currentQ.correctAnswer;
     
-    // Score Calculation: Base (10) + Speed Bonus + Streak Bonus
     if (isCorrect) {
       const speedBonus = Math.round(timeLeft / 10);
       const streakBonus = streak * 2;
@@ -134,22 +129,20 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
     setShowSummary(true);
   };
 
-  // Lifeline Handlers
   const handleFiftyFifty = () => {
     if (fiftyFiftyUsed || isSubmitted) return;
     const currentQ = questions[currentIndex];
     const wrongOptions = currentQ.options.filter(o => o !== currentQ.correctAnswer);
-    // Shuffle and pick 2 to hide
     const shuffled = wrongOptions.sort(() => 0.5 - Math.random());
     setHiddenOptions(shuffled.slice(0, 2));
     setFiftyFiftyUsed(true);
-    setSessionScore(prev => Math.max(0, prev - 2)); // Small penalty cost
+    setSessionScore(prev => Math.max(0, prev - 2));
   };
 
   const handleHint = () => {
     if (hintUsed || isSubmitted) return;
     setHintUsed(true);
-    setSessionScore(prev => Math.max(0, prev - 2)); // Small penalty cost
+    setSessionScore(prev => Math.max(0, prev - 2));
   };
 
   const isLastQuestion = questions.length > 0 && currentIndex === questions.length - 1;
@@ -157,7 +150,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex flex-col items-center justify-center">
         <LoadingSpinner />
       </div>
     );
@@ -165,44 +158,30 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-6 text-center animate-fade-in">
-        <div className="text-red-500 mb-4 text-xl font-bold">Oops!</div>
-        <p className="text-gray-600 mb-6">{error}</p>
-        <button onClick={onExit} className="px-6 py-3 bg-gray-900 text-white rounded-xl shadow-lg">Go Back</button>
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center animate-in">
+        <div className="text-rose-500 mb-4 text-xl font-bold">Connection Error</div>
+        <p className="text-slate-500 mb-6">{error}</p>
+        <button onClick={onExit} className="px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800">Return Home</button>
       </div>
     );
   }
 
   if (showSummary) {
-     const maxPossibleBase = questions.length * 10;
-     const percentage = Math.min(100, Math.round((sessionScore / (maxPossibleBase * 1.5)) * 100)); // Approx max including bonuses
-
      return (
-        <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4 animate-fade-in relative overflow-hidden">
-             {/* Simple CSS Confetti Background */}
-             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {[...Array(20)].map((_, i) => (
-                    <div key={i} className="absolute animate-float opacity-50" style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        width: '10px', height: '10px',
-                        background: ['#8b5cf6', '#ec4899', '#f59e0b'][Math.floor(Math.random() * 3)],
-                        animationDuration: `${3 + Math.random() * 5}s`
-                    }}></div>
-                ))}
-             </div>
-
-             <div className="bg-white/80 backdrop-blur-xl p-8 rounded-[2rem] shadow-2xl max-w-sm w-full text-center relative z-10 border border-white/50 animate-scale-in">
-                 <div className="w-24 h-24 bg-gradient-to-tr from-violet-500 to-fuchsia-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-violet-300">
-                    <CheckCircle2 className="w-12 h-12 text-white" />
+        <div className="min-h-screen flex items-center justify-center p-4 animate-in relative overflow-hidden">
+             
+             <div className="abstract-card p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center relative z-10 animate-in">
+                 
+                 <div className="w-24 h-24 bg-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-white rotate-6 shadow-xl shadow-indigo-200">
+                    <CheckCircle2 className="w-12 h-12" />
                  </div>
 
-                 <h2 className="text-2xl font-black text-slate-800 mb-2">Practice Complete!</h2>
-                 <p className="text-slate-500 mb-6 font-medium">Your score reflects speed & accuracy.</p>
+                 <h2 className="text-3xl font-black text-slate-900 mb-2 tracking-tight">Session Complete</h2>
+                 <p className="text-slate-500 mb-8 font-medium">Your brain is getting stronger.</p>
                  
-                 <div className="bg-slate-50 rounded-2xl p-4 mb-8 border border-slate-100">
-                     <div className="text-sm text-slate-400 font-bold uppercase tracking-wider mb-1">Total Score</div>
-                     <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-fuchsia-600">
+                 <div className="bg-slate-50 rounded-2xl p-6 mb-8 border border-slate-100">
+                     <div className="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">Total Score</div>
+                     <div className="text-5xl font-black text-indigo-600">
                          {sessionScore}
                      </div>
                  </div>
@@ -210,15 +189,15 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                  <div className="space-y-3">
                      <button 
                         onClick={loadQuestions}
-                        className="w-full py-4 bg-violet-600 text-white rounded-xl font-bold shadow-lg shadow-violet-200 hover:bg-violet-700 active:scale-95 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-slate-800 active:scale-95 transition-all flex items-center justify-center gap-2"
                      >
-                        <RefreshCcw className="w-5 h-5" /> Play Again
+                        <RefreshCcw className="w-4 h-4" /> Go Again
                      </button>
                      <button 
                         onClick={onExit}
-                        className="w-full py-4 bg-white border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-transparent border border-slate-200 text-slate-600 rounded-xl font-bold hover:bg-slate-50 transition-colors flex items-center justify-center gap-2"
                      >
-                        <Home className="w-5 h-5" /> Dashboard
+                        <Home className="w-4 h-4" /> Dashboard
                      </button>
                  </div>
              </div>
@@ -227,103 +206,111 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
-      {/* Top Stats Bar */}
-      <div className="bg-white/80 backdrop-blur-md px-4 py-3 shadow-sm border-b border-slate-100 sticky top-0 z-20 flex justify-between items-center safe-area-pt">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* Top Bar */}
+      <div className="px-6 py-4 sticky top-0 z-20 flex justify-between items-center safe-area-pt backdrop-blur-md bg-white/30 border-b border-white/20">
           <div className="flex items-center gap-4">
-            <button onClick={onExit} className="p-2 rounded-full hover:bg-slate-100 transition-colors">
-                <X className="w-5 h-5 text-slate-500" />
+            <button onClick={onExit} className="w-10 h-10 rounded-full bg-white border border-slate-100 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors">
+                <X className="w-5 h-5" />
             </button>
             <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{category}</span>
-                <span className="text-xs font-bold text-violet-600 bg-violet-50 px-2 py-0.5 rounded-full w-fit">{difficulty.split(' ')[0]} Mode</span>
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{category}</span>
+                <span className="text-xs font-bold text-slate-900">{difficulty.split(' ')[0]} MODE</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 bg-amber-50 px-3 py-1.5 rounded-full border border-amber-100">
-                  <Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
-                  <span className="text-sm font-bold text-amber-700">{streak}</span>
+              <div className="flex items-center gap-1.5 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-100">
+                  <Zap className={`w-4 h-4 ${streak > 0 ? 'text-yellow-500 fill-yellow-500' : 'text-slate-300'}`} />
+                  <span className="text-sm font-bold text-slate-700">{streak}</span>
               </div>
-              <div className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-full">
-                  <span className="text-sm font-black text-slate-700">{sessionScore} pts</span>
+              <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-slate-100 shadow-sm">
+                  <span className="text-sm font-black text-slate-800 tracking-wide">{sessionScore} pts</span>
               </div>
           </div>
       </div>
 
-      {/* Timer Bar */}
-      <div className="w-full h-1.5 bg-slate-200">
+      {/* Progress Bar */}
+      <div className="w-full h-1.5 bg-slate-100">
           <div 
-            className={`h-full transition-all duration-100 ease-linear ${
-                timeLeft > 60 ? 'bg-green-500' : timeLeft > 30 ? 'bg-amber-500' : 'bg-red-500'
+            className={`h-full transition-all duration-100 ease-linear rounded-r-full ${
+                timeLeft > 60 ? 'bg-emerald-500' : timeLeft > 30 ? 'bg-amber-500' : 'bg-rose-500'
             }`} 
             style={{ width: `${timeLeft}%` }}
           ></div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 overflow-y-auto pb-32">
-        <div className="max-w-xl mx-auto flex justify-between text-xs font-bold text-slate-400 mb-4 px-2">
-            <span>Question {currentIndex + 1} of {questions.length}</span>
-            <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> Speed Bonus Active</span>
-        </div>
+      <div className="flex-1 p-4 overflow-y-auto pb-32 flex flex-col justify-center">
+        <div className="max-w-2xl mx-auto w-full">
+            <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest px-2">
+                <span>Question {currentIndex + 1} / {questions.length}</span>
+                <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> Speed Bonus Active</span>
+            </div>
 
-        {currentQ && (
-            <QuizCard 
-                key={currentQ.id}
-                question={currentQ}
-                selectedOption={selectedOption}
-                onSelectOption={handleOptionSelect}
-                isSubmitted={isSubmitted}
-                hiddenOptions={hiddenOptions}
-                hintRevealed={hintUsed}
-            />
-        )}
+            {currentQ && (
+                <QuizCard 
+                    key={currentQ.id}
+                    question={currentQ}
+                    selectedOption={selectedOption}
+                    onSelectOption={handleOptionSelect}
+                    isSubmitted={isSubmitted}
+                    hiddenOptions={hiddenOptions}
+                    hintRevealed={hintUsed}
+                />
+            )}
+        </div>
       </div>
 
       {/* Bottom Lifelines & Action Bar */}
-      <div className="fixed bottom-0 left-0 w-full z-30">
-        
-        {/* Lifelines (Only visible if not submitted) */}
-        {!isSubmitted && (
-            <div className="flex justify-center gap-4 mb-4">
-                <button 
-                    onClick={handleFiftyFifty}
-                    disabled={fiftyFiftyUsed}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold shadow-lg transition-all active:scale-95 ${
-                        fiftyFiftyUsed ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-white text-indigo-600 hover:bg-indigo-50 border border-indigo-100'
-                    }`}
-                >
-                    <Divide className="w-4 h-4" /> 50/50
-                </button>
-                <button 
-                    onClick={handleHint}
-                    disabled={hintUsed}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold shadow-lg transition-all active:scale-95 ${
-                        hintUsed ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-white text-amber-600 hover:bg-amber-50 border border-amber-100'
-                    }`}
-                >
-                    <HelpCircle className="w-4 h-4" /> Hint
-                </button>
-            </div>
-        )}
+      <div className="fixed bottom-0 left-0 w-full z-30 pointer-events-none">
+        <div className="pointer-events-auto p-4 max-w-2xl mx-auto w-full">
+            
+            {/* Lifelines */}
+            {!isSubmitted && (
+                <div className="flex justify-center gap-4 mb-4">
+                    <button 
+                        onClick={handleFiftyFifty}
+                        disabled={fiftyFiftyUsed}
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-white border shadow-lg transition-all active:scale-95 ${
+                            fiftyFiftyUsed 
+                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-100 shadow-none' 
+                            : 'border-slate-100 text-slate-600 hover:text-indigo-600'
+                        }`}
+                    >
+                        <Divide className="w-4 h-4" /> 50/50
+                    </button>
+                    <button 
+                        onClick={handleHint}
+                        disabled={hintUsed}
+                        className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm bg-white border shadow-lg transition-all active:scale-95 ${
+                            hintUsed 
+                            ? 'bg-slate-100 text-slate-400 cursor-not-allowed border-slate-100 shadow-none' 
+                            : 'border-slate-100 text-slate-600 hover:text-amber-600'
+                        }`}
+                    >
+                        <HelpCircle className="w-4 h-4" /> Hint
+                    </button>
+                </div>
+            )}
 
-        {/* Action Button */}
-        <div className="bg-white/90 backdrop-blur-xl border-t border-slate-200 p-4 pb-6 safe-area-pb">
-            <div className="max-w-xl mx-auto">
+            {/* Action Button Container */}
+            <div className="abstract-card p-4 rounded-[1.5rem] border-t border-white/50 shadow-2xl">
                 {isSubmitted ? (
                     <button
                         onClick={isLastQuestion ? handleFinish : handleNext}
-                        className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 animate-scale-in ${
-                            isLastQuestion ? 'bg-green-600 shadow-green-200' : 'bg-violet-600 shadow-violet-200'
+                        className={`w-full py-4 rounded-xl font-bold text-white shadow-xl transition-all active:scale-[0.98] flex items-center justify-center gap-2 animate-in ${
+                            isLastQuestion 
+                            ? 'bg-emerald-600 hover:bg-emerald-500 shadow-emerald-200' 
+                            : 'bg-indigo-600 hover:bg-indigo-500 shadow-indigo-200'
                         }`}
                     >
-                        {isLastQuestion ? 'View Results' : 'Next Question'}
+                        {isLastQuestion ? 'Complete Session' : 'Next Question'}
                         <ArrowRight className="w-5 h-5" />
                     </button>
                 ) : (
-                    <div className="text-center text-slate-400 text-sm font-medium py-3 animate-pulse">
-                        Select an option to lock answer
+                    <div className="text-center text-slate-400 text-xs font-bold uppercase tracking-widest py-3 animate-pulse">
+                        Select an option to continue
                     </div>
                 )}
             </div>
