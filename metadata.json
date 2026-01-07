@@ -1,0 +1,5 @@
+{
+  "name": "VocabMaster MBA",
+  "description": "A smart vocabulary practice application for MBA CET aspirants using AI to generate tailored quizzes on Synonyms, Antonyms, Idioms, and Cloze tests with performance tracking.",
+  "requestFramePermissions": []
+}

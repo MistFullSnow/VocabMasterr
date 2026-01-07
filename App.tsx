@@ -1,0 +1,53 @@
+import React, { useState, useEffect } from 'react';
+import { Dashboard } from './components/Dashboard';
+import { QuizMode } from './components/QuizMode';
+import { LoginScreen } from './components/LoginScreen';
+import { QuizCategory, UserProfile } from './types';
+
+const App: React.FC = () => {
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [activeCategory, setActiveCategory] = useState<QuizCategory | null>(null);
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('vocab_master_last_user');
+    if (savedEmail) {
+      setUser({ email: savedEmail });
+    }
+  }, []);
+
+  const handleLogin = (profile: UserProfile) => {
+    setUser(profile);
+    localStorage.setItem('vocab_master_last_user', profile.email);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setActiveCategory(null);
+    localStorage.removeItem('vocab_master_last_user');
+  };
+
+  const handleStartQuiz = (category: QuizCategory) => {
+    setActiveCategory(category);
+  };
+
+  const handleExitQuiz = () => {
+    setActiveCategory(null);
+  };
+
+  if (!user) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 text-gray-900 font-sans">
+      {activeCategory ? (
+        <QuizMode category={activeCategory} user={user} onExit={handleExitQuiz} />
+      ) : (
+        <Dashboard user={user} onStartQuiz={handleStartQuiz} onLogout={handleLogout} />
+      )}
+    </div>
+  );
+};
+
+export default App;
