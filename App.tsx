@@ -42,8 +42,8 @@ const App: React.FC = () => {
   }
 
   return (
-    // Removed bg-slate-50 and text-gray-900 to allow index.html cosmic theme to show
-    <div className="min-h-screen font-sans text-slate-100 selection:bg-cyan-500/30">
+    // min-h-[100dvh] ensures it covers at least the dynamic viewport on mobile
+    <div className="min-h-[100dvh] font-sans text-slate-100 selection:bg-cyan-500/30">
       {activeCategory ? (
         <QuizMode 
           category={activeCategory} 

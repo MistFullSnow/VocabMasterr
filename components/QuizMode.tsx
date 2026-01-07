@@ -150,7 +150,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950">
         <LoadingSpinner />
       </div>
     );
@@ -158,7 +158,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center animate-in">
+      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-6 text-center bg-slate-950 animate-in">
         <div className="text-red-400 mb-4 text-xl font-bold">Signal Lost</div>
         <p className="text-slate-500 mb-6">{error}</p>
         <button onClick={onExit} className="px-6 py-3 bg-white/10 text-white rounded-xl hover:bg-white/20">Abort Mission</button>
@@ -168,10 +168,8 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
 
   if (showSummary) {
      return (
-        <div className="min-h-screen flex items-center justify-center p-4 animate-in relative overflow-hidden">
-             
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950 animate-in overflow-hidden">
              <div className="glass-card p-10 rounded-[2.5rem] shadow-2xl max-w-sm w-full text-center relative z-10 animate-in border border-violet-500/20">
-                 
                  <div className="w-24 h-24 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-[2rem] flex items-center justify-center mx-auto mb-6 text-white rotate-6 shadow-[0_0_30px_rgba(139,92,246,0.4)]">
                     <CheckCircle2 className="w-12 h-12" />
                  </div>
@@ -206,43 +204,49 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
   }
 
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden">
-      {/* Top Bar */}
-      <div className="px-6 py-4 sticky top-0 z-20 flex justify-between items-center safe-area-pt backdrop-blur-xl bg-slate-950/60 border-b border-white/5">
-          <div className="flex items-center gap-4">
-            <button onClick={onExit} className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-colors">
-                <X className="w-5 h-5" />
-            </button>
-            <div className="flex flex-col">
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{category}</span>
-                <span className="text-xs font-bold text-cyan-400">{difficulty.split(' ')[0]} PROTOCOL</span>
-            </div>
+    // Fixed layout for mobile robustness (no body scroll, just content scroll)
+    <div className="fixed inset-0 z-50 h-[100dvh] w-full flex flex-col bg-slate-950 text-slate-100 overflow-hidden">
+      
+      {/* Header Container - Fixed at Top */}
+      <div className="flex-none z-20 bg-slate-950/80 backdrop-blur-xl border-b border-white/5 safe-area-pt">
+          {/* Top Bar */}
+          <div className="px-6 py-4 flex justify-between items-center">
+              <div className="flex items-center gap-4">
+                <button onClick={onExit} className="w-10 h-10 rounded-full bg-white/5 border border-white/5 flex items-center justify-center text-slate-400 hover:text-white transition-colors active:scale-95">
+                    <X className="w-5 h-5" />
+                </button>
+                <div className="flex flex-col">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{category}</span>
+                    <span className="text-xs font-bold text-cyan-400">{difficulty.split(' ')[0]} PROTOCOL</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1.5 bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/20">
+                      <Zap className={`w-4 h-4 ${streak > 0 ? 'text-yellow-400 fill-yellow-400' : 'text-slate-600'}`} />
+                      <span className={`text-sm font-bold ${streak > 0 ? 'text-yellow-400' : 'text-slate-600'}`}>{streak}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
+                      <span className="text-sm font-black text-white tracking-wide">{sessionScore} pts</span>
+                  </div>
+              </div>
           </div>
 
-          <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5 bg-yellow-500/10 px-3 py-1.5 rounded-full border border-yellow-500/20">
-                  <Zap className={`w-4 h-4 ${streak > 0 ? 'text-yellow-400 fill-yellow-400' : 'text-slate-600'}`} />
-                  <span className={`text-sm font-bold ${streak > 0 ? 'text-yellow-400' : 'text-slate-600'}`}>{streak}</span>
-              </div>
-              <div className="flex items-center gap-1.5 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 shadow-sm">
-                  <span className="text-sm font-black text-white tracking-wide">{sessionScore} pts</span>
-              </div>
+          {/* Neon Progress Bar - Now part of fixed header */}
+          <div className="w-full h-1 bg-slate-900">
+              <div 
+                className={`h-full transition-all duration-100 ease-linear shadow-[0_0_10px_currentColor] ${
+                    timeLeft > 60 ? 'bg-emerald-500 text-emerald-500' : timeLeft > 30 ? 'bg-amber-500 text-amber-500' : 'bg-red-500 text-red-500'
+                }`} 
+                style={{ width: `${timeLeft}%` }}
+              ></div>
           </div>
       </div>
 
-      {/* Neon Progress Bar */}
-      <div className="w-full h-1 bg-slate-900">
-          <div 
-            className={`h-full transition-all duration-100 ease-linear shadow-[0_0_10px_currentColor] ${
-                timeLeft > 60 ? 'bg-emerald-500 text-emerald-500' : timeLeft > 30 ? 'bg-amber-500 text-amber-500' : 'bg-red-500 text-red-500'
-            }`} 
-            style={{ width: `${timeLeft}%` }}
-          ></div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex-1 p-4 overflow-y-auto pb-32 flex flex-col justify-center">
-        <div className="max-w-2xl mx-auto w-full">
+      {/* Main Content - Independent Scroll Area */}
+      {/* pb-48 ensures content isn't hidden behind the footer */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 pb-48 scroll-smooth overscroll-contain">
+        <div className="max-w-2xl mx-auto w-full pt-4">
             <div className="flex justify-between text-[10px] font-bold text-slate-500 mb-4 uppercase tracking-widest px-2">
                 <span>Seq {currentIndex + 1} / {questions.length}</span>
                 <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> Time Dilation Active</span>
@@ -262,9 +266,9 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
         </div>
       </div>
 
-      {/* Bottom Lifelines & Action Bar */}
-      <div className="fixed bottom-0 left-0 w-full z-30 pointer-events-none">
-        <div className="pointer-events-auto p-4 max-w-2xl mx-auto w-full">
+      {/* Footer - Fixed at Bottom */}
+      <div className="absolute bottom-0 left-0 w-full z-30 pointer-events-none safe-area-pb">
+        <div className="pointer-events-auto p-4 max-w-2xl mx-auto w-full bg-gradient-to-t from-slate-950 via-slate-950/90 to-transparent pt-12">
             
             {/* Lifelines */}
             {!isSubmitted && (
@@ -275,7 +279,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border backdrop-blur-md transition-all active:scale-95 ${
                             fiftyFiftyUsed 
                             ? 'bg-white/5 text-slate-600 border-white/5 cursor-not-allowed' 
-                            : 'bg-slate-900/60 border-white/20 text-indigo-300 hover:text-white hover:border-white/40'
+                            : 'bg-slate-900/60 border-white/20 text-indigo-300 hover:text-white hover:border-white/40 shadow-lg'
                         }`}
                     >
                         <Divide className="w-4 h-4" /> 50/50
@@ -286,7 +290,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
                         className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-sm border backdrop-blur-md transition-all active:scale-95 ${
                             hintUsed 
                             ? 'bg-white/5 text-slate-600 border-white/5 cursor-not-allowed' 
-                            : 'bg-slate-900/60 border-white/20 text-amber-300 hover:text-white hover:border-white/40'
+                            : 'bg-slate-900/60 border-white/20 text-amber-300 hover:text-white hover:border-white/40 shadow-lg'
                         }`}
                     >
                         <HelpCircle className="w-4 h-4" /> Hint
@@ -295,7 +299,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, difficulty, user, 
             )}
 
             {/* Action Button Container */}
-            <div className="glass-card p-4 rounded-[1.5rem] border-t border-white/10 shadow-2xl">
+            <div className="glass-card p-4 rounded-[1.5rem] border-t border-white/10 shadow-2xl backdrop-blur-2xl bg-slate-900/80">
                 {isSubmitted ? (
                     <button
                         onClick={isLastQuestion ? handleFinish : handleNext}

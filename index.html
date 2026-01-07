@@ -18,6 +18,11 @@
         --neon-cyan: #22d3ee;
       }
 
+      html, body {
+        height: 100%;
+        overscroll-behavior-y: none; /* Prevents pull-to-refresh/rubber banding */
+      }
+
       body {
         font-family: 'Outfit', sans-serif;
         background-color: #020617; /* Slate 950 */
@@ -109,7 +114,7 @@
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
     <div class="blob blob-3"></div>
-    <div id="root" class="relative z-10 min-h-screen"></div>
+    <div id="root" class="relative z-10 h-full"></div>
     <script type="module" src="/index.tsx"></script>
   </body>
 </html>
