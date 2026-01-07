@@ -1,10 +1,8 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuizCategory, Question } from "../types";
 
-const apiKey = process.env.API_KEY;
-// We initialize lazily to ensure environment variable is ready, 
-// though generally in this setup it is available at import time.
-const getAI = () => new GoogleGenAI({ apiKey: apiKey });
+// We initialize lazily to ensure environment variable is ready.
+const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
 const SYSTEM_INSTRUCTION = `
 You are an expert verbal ability tutor for MBA CET exams. 

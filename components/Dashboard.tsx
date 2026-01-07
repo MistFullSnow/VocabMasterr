@@ -92,7 +92,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                   formatter={(value: number) => [`${value.toFixed(1)}%`, 'Accuracy']}
                 />
                 <Bar dataKey="accuracy" radius={[0, 4, 4, 0]} barSize={24}>
-                  {catStats.map((entry, index) => (
+                  {catStats.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Bar>
@@ -134,7 +134,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
       {/* Quiz Launchers */}
       <h2 className="text-2xl font-bold text-gray-800 mb-6">Start a Quiz</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Object.values(QuizCategory).map((category, idx) => (
+        {Object.values(QuizCategory).map((category) => (
           <button
             key={category}
             onClick={() => onStartQuiz(category)}
