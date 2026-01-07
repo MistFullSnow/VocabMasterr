@@ -1,0 +1,21 @@
+{
+  "name": "VocabMaster MBA",
+  "short_name": "VocabMaster",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/10826/10826620.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/10826/10826620.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

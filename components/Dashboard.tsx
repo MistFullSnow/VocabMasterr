@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { QuizCategory, UserProfile } from '../types';
 import { getStats, getCategoryStats, clearData } from '../services/storageService';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, User } from 'lucide-react';
+import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, Sparkles, ChevronRight } from 'lucide-react';
 
 interface DashboardProps {
   user: UserProfile;
@@ -15,7 +15,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
   const [catStats, setCatStats] = useState(getCategoryStats(user.email));
 
   useEffect(() => {
-    // Refresh stats on mount or user change
     setStats(getStats(user.email));
     setCatStats(getCategoryStats(user.email));
   }, [user.email]);
@@ -26,72 +25,106 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
 
   const getCategoryIcon = (cat: QuizCategory) => {
     switch (cat) {
-      case QuizCategory.SYNONYMS: return <BookOpen className="w-6 h-6" />;
-      case QuizCategory.ANTONYMS: return <BrainCircuit className="w-6 h-6" />;
-      case QuizCategory.IDIOMS: return <Lightbulb className="w-6 h-6" />;
-      case QuizCategory.CLOZE: return <PenTool className="w-6 h-6" />;
-      case QuizCategory.SPOT_ERROR: return <AlertTriangle className="w-6 h-6" />;
-      case QuizCategory.SENTENCE_ARRANGEMENT: return <ArrowRightLeft className="w-6 h-6" />;
-      case QuizCategory.POSSIBLE_STARTERS: return <Spline className="w-6 h-6" />;
-      default: return <Award className="w-6 h-6" />;
+      case QuizCategory.SYNONYMS: return <BookOpen className="w-5 h-5" />;
+      case QuizCategory.ANTONYMS: return <BrainCircuit className="w-5 h-5" />;
+      case QuizCategory.IDIOMS: return <Lightbulb className="w-5 h-5" />;
+      case QuizCategory.CLOZE: return <PenTool className="w-5 h-5" />;
+      case QuizCategory.SPOT_ERROR: return <AlertTriangle className="w-5 h-5" />;
+      case QuizCategory.SENTENCE_ARRANGEMENT: return <ArrowRightLeft className="w-5 h-5" />;
+      case QuizCategory.POSSIBLE_STARTERS: return <Spline className="w-5 h-5" />;
+      default: return <Award className="w-5 h-5" />;
     }
   };
-
-  const COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#10b981', '#f59e0b', '#3b82f6', '#84cc16'];
+  
+  // Custom Gradient Colors
+  const COLORS = ['#8b5cf6', '#d946ef', '#f43f5e', '#ec4899', '#6366f1', '#3b82f6', '#10b981', '#f59e0b'];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      {/* Top Bar */}
-      <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-        <div className="flex items-center gap-3">
-             <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
-                <User className="w-5 h-5" />
-             </div>
-             <div>
-                 <p className="text-xs text-gray-400 font-bold uppercase">Logged in as</p>
-                 <p className="text-sm font-semibold text-gray-800">{user.email}</p>
-             </div>
+    <div className="max-w-5xl mx-auto px-4 pb-24 pt-4 md:pt-8 min-h-screen bg-slate-50/50">
+      
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+            <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 flex items-center gap-2">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">VocabMaster</span>
+            </h1>
+            <p className="text-xs font-semibold text-gray-400 mt-0.5">{user.email}</p>
         </div>
         <button 
             onClick={onLogout}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 transition-colors px-3 py-2 rounded-lg hover:bg-red-50"
+            className="p-2 bg-white rounded-full shadow-sm text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors"
+            aria-label="Logout"
         >
-            <LogOut className="w-4 h-4" /> Logout
+            <LogOut className="w-5 h-5" />
         </button>
       </div>
 
-      <header className="mb-10 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">VocabMaster MBA</h1>
-          <p className="text-gray-500 mt-2">Track your Verbal Ability progress</p>
-        </div>
-        <div className="flex gap-3">
-             <div className="bg-indigo-600 text-white px-5 py-2 rounded-lg shadow-md flex items-center gap-2">
+      {/* Hero Stats */}
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        <div className="bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl p-4 text-white shadow-lg shadow-violet-200">
+            <div className="flex items-center gap-2 mb-2 opacity-80">
                 <TrendingUp className="w-4 h-4" />
-                <span className="font-bold">{overallAccuracy}%</span> Accuracy
+                <span className="text-xs font-bold uppercase tracking-wider">Accuracy</span>
             </div>
-             <div className="bg-emerald-600 text-white px-5 py-2 rounded-lg shadow-md flex items-center gap-2">
-                <Award className="w-4 h-4" />
-                <span className="font-bold">{stats.masteredWords.length}</span> Mastered
-            </div>
+            <div className="text-3xl font-black">{overallAccuracy}%</div>
         </div>
-      </header>
+        <div className="bg-white rounded-2xl p-4 text-gray-800 shadow-sm border border-gray-100">
+            <div className="flex items-center gap-2 mb-2 text-fuchsia-600">
+                <Award className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider text-gray-400">Mastered</span>
+            </div>
+            <div className="text-3xl font-black text-gray-900">{stats.masteredWords.length}</div>
+        </div>
+      </div>
 
-      {/* Main Stats Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        {/* Chart */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h2 className="text-lg font-semibold text-gray-800 mb-6">Performance by Category</h2>
-          <div className="h-64 w-full">
+      {/* Start Quiz Section */}
+      <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-amber-500" /> Start Practice
+      </h2>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        {Object.values(QuizCategory).map((category, idx) => {
+           const catStat = catStats.find(c => c.category === category);
+           const attempts = catStat?.attempts || 0;
+           
+           return (
+              <button
+                key={category}
+                onClick={() => onStartQuiz(category)}
+                className="group relative flex flex-col bg-white p-4 rounded-2xl shadow-sm border border-gray-100 hover:border-violet-300 hover:shadow-md transition-all active:scale-95 text-left h-32 justify-between overflow-hidden"
+              >
+                <div className="absolute right-0 top-0 w-24 h-24 bg-gradient-to-br from-gray-50 to-gray-100 rounded-full -mr-10 -mt-10 group-hover:from-violet-50 group-hover:to-fuchsia-50 transition-colors"></div>
+                
+                <div className={`relative z-10 w-10 h-10 rounded-xl flex items-center justify-center mb-2 bg-gray-50 text-violet-600 group-hover:bg-violet-600 group-hover:text-white transition-colors duration-300`}>
+                  {getCategoryIcon(category)}
+                </div>
+                
+                <div className="relative z-10">
+                    <h3 className="font-bold text-gray-800 text-sm leading-tight mb-0.5 pr-2">{category}</h3>
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">
+                        {attempts} runs
+                    </p>
+                </div>
+              </button>
+           );
+        })}
+      </div>
+
+      {/* Analytics */}
+      <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-bold text-gray-800">Performance Breakdown</h2>
+            <div className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500 font-medium">Last 30 Days</div>
+          </div>
+          <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={catStats} layout="vertical" margin={{ left: 40 }}>
-                <XAxis type="number" domain={[0, 100]} hide />
-                <YAxis type="category" dataKey="category" width={140} tick={{fontSize: 11, fontWeight: 500}} />
+              <BarChart data={catStats}>
+                <XAxis dataKey="category" hide />
                 <Tooltip 
-                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
-                  formatter={(value: number) => [`${value.toFixed(1)}%`, 'Accuracy']}
+                  cursor={{fill: '#f3f4f6'}}
+                  contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)' }}
                 />
-                <Bar dataKey="accuracy" radius={[0, 4, 4, 0]} barSize={24}>
+                <Bar dataKey="accuracy" radius={[4, 4, 4, 4]}>
                   {catStats.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
@@ -99,60 +132,29 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
-
-        {/* Quick Actions / Summary */}
-        <div className="bg-gradient-to-br from-indigo-500 to-purple-600 p-6 rounded-2xl shadow-lg text-white flex flex-col justify-between">
-            <div>
-                <h2 className="text-xl font-bold mb-2">Keep going!</h2>
-                <p className="text-indigo-100 mb-6">Practice makes perfect. The more questions you answer, the smarter your future quizzes become.</p>
-                <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b border-indigo-400 pb-2">
-                        <span className="text-indigo-100">Questions Attempted</span>
-                        <span className="text-2xl font-bold">{stats.totalAttempts}</span>
-                    </div>
-                    <div className="flex justify-between items-center border-b border-indigo-400 pb-2">
-                        <span className="text-indigo-100">Correct Answers</span>
-                        <span className="text-2xl font-bold">{stats.correctAttempts}</span>
-                    </div>
-                </div>
-            </div>
-            
-             <button 
-                onClick={() => {
-                    if(confirm('Are you sure you want to reset all progress for this profile?')) {
-                        clearData(user.email);
-                    }
-                }}
-                className="mt-6 flex items-center justify-center gap-2 text-xs text-indigo-200 hover:text-white transition-colors"
-            >
-                <Trash2 className="w-3 h-3" /> Reset Profile Progress
-            </button>
-        </div>
+          <div className="flex flex-wrap gap-2 mt-4 justify-center">
+             {catStats.slice(0, 4).map((c, i) => (
+                 <div key={i} className="flex items-center gap-1 text-[10px] text-gray-500">
+                     <span className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[i]}}></span>
+                     {c.category.split(' ')[0]}
+                 </div>
+             ))}
+          </div>
+      </div>
+      
+      <div className="text-center">
+         <button 
+            onClick={() => {
+                if(confirm('Are you sure you want to reset all progress for this profile?')) {
+                    clearData(user.email);
+                }
+            }}
+            className="inline-flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-red-500 transition-colors"
+        >
+            <Trash2 className="w-3 h-3" /> Reset Data
+        </button>
       </div>
 
-      {/* Quiz Launchers */}
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Start a Quiz</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {Object.values(QuizCategory).map((category) => (
-          <button
-            key={category}
-            onClick={() => onStartQuiz(category)}
-            className="group relative overflow-hidden bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-xl hover:border-indigo-300 transition-all duration-300 text-left"
-          >
-            <div className={`absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity text-indigo-600`}>
-                {getCategoryIcon(category)}
-            </div>
-            <div className={`w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-gray-50 group-hover:bg-indigo-50 text-indigo-600 group-hover:scale-110 transition-transform duration-300`}>
-               {getCategoryIcon(category)}
-            </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-1">{category}</h3>
-            <p className="text-sm text-gray-500">
-               {catStats.find(c => c.category === category)?.attempts || 0} attempts
-            </p>
-          </button>
-        ))}
-      </div>
     </div>
   );
 };
