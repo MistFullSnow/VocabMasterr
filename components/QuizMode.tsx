@@ -32,7 +32,8 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, user, onExit }) =>
     setError(null);
     setShowSummary(false);
     try {
-      const mastered = getMasteredWords(user.email);
+      // Now async
+      const mastered = await getMasteredWords(user.email);
       const newQuestions = await generateQuestions(category, 5, mastered);
       setQuestions(newQuestions);
       setCurrentIndex(0);
@@ -51,7 +52,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, user, onExit }) =>
     loadQuestions();
   }, [loadQuestions]);
 
-  const handleOptionSelect = (option: string) => {
+  const handleOptionSelect = async (option: string) => {
     setSelectedOption(option);
     setIsSubmitted(true);
     
@@ -63,6 +64,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, user, onExit }) =>
     }
     setSessionTotal(prev => prev + 1);
     
+    // Now async, but we don't need to await it for the UI to proceed
     saveAttempt(user.email, category, currentQ.targetWord, isCorrect);
   };
 
@@ -143,7 +145,6 @@ export const QuizMode: React.FC<QuizModeProps> = ({ category, user, onExit }) =>
   }
 
   const currentQ = questions[currentIndex];
-  const progress = ((currentIndex + (isSubmitted ? 1 : 0)) / questions.length) * 100;
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">

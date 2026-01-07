@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { QuizCategory, UserProfile } from '../types';
+import { QuizCategory, UserProfile, UserStats, CategoryStats } from '../types';
 import { getStats, getCategoryStats, clearData } from '../services/storageService';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, Sparkles, ChevronRight } from 'lucide-react';
+import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, Sparkles, Database, Cloud } from 'lucide-react';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface DashboardProps {
   user: UserProfile;
@@ -11,13 +12,29 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogout }) => {
-  const [stats, setStats] = useState(getStats(user.email));
-  const [catStats, setCatStats] = useState(getCategoryStats(user.email));
+  const [stats, setStats] = useState<UserStats | null>(null);
+  const [catStats, setCatStats] = useState<CategoryStats[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setStats(getStats(user.email));
-    setCatStats(getCategoryStats(user.email));
+    const fetchData = async () => {
+      setLoading(true);
+      const s = await getStats(user.email);
+      const c = await getCategoryStats(user.email);
+      setStats(s);
+      setCatStats(c);
+      setLoading(false);
+    };
+    fetchData();
   }, [user.email]);
+
+  if (loading || !stats) {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+            <LoadingSpinner />
+        </div>
+    );
+  }
 
   const overallAccuracy = stats.totalAttempts > 0 
     ? Math.round((stats.correctAttempts / stats.totalAttempts) * 100) 
@@ -36,7 +53,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
     }
   };
   
-  // Custom Gradient Colors
   const COLORS = ['#8b5cf6', '#d946ef', '#f43f5e', '#ec4899', '#6366f1', '#3b82f6', '#10b981', '#f59e0b'];
 
   return (
@@ -48,7 +64,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             <h1 className="text-xl md:text-2xl font-extrabold text-gray-900 flex items-center gap-2">
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-violet-600 to-fuchsia-600">VocabMaster</span>
             </h1>
-            <p className="text-xs font-semibold text-gray-400 mt-0.5">{user.email}</p>
+            <p className="text-xs font-semibold text-gray-400 mt-0.5 flex items-center gap-1">
+                {user.email} 
+                <Cloud className="w-3 h-3 text-green-500" />
+            </p>
         </div>
         <button 
             onClick={onLogout}
@@ -114,7 +133,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
       <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-100 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-bold text-gray-800">Performance Breakdown</h2>
-            <div className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500 font-medium">Last 30 Days</div>
+            <div className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500 font-medium">Lifetime</div>
           </div>
           <div className="h-48 w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -131,14 +150,6 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
-          </div>
-          <div className="flex flex-wrap gap-2 mt-4 justify-center">
-             {catStats.slice(0, 4).map((c, i) => (
-                 <div key={i} className="flex items-center gap-1 text-[10px] text-gray-500">
-                     <span className="w-2 h-2 rounded-full" style={{backgroundColor: COLORS[i]}}></span>
-                     {c.category.split(' ')[0]}
-                 </div>
-             ))}
           </div>
       </div>
       

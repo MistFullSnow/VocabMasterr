@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { UserProfile } from '../types';
-import { LogIn, UserCircle2, Sparkles } from 'lucide-react';
+import { LogIn, UserCircle2, Sparkles, Cloud } from 'lucide-react';
 
 interface LoginScreenProps {
   onLogin: (profile: UserProfile) => void;
@@ -8,7 +8,7 @@ interface LoginScreenProps {
 
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
-  
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email.trim()) {
@@ -54,6 +54,11 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             </div>
           </div>
 
+          <div className="flex items-center justify-center gap-2 py-2 bg-green-50 rounded-lg border border-green-100">
+             <Cloud className="w-4 h-4 text-green-600" />
+             <span className="text-[10px] font-bold text-green-700 uppercase tracking-wide">Cloud Sync Enabled</span>
+          </div>
+
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-violet-600 to-fuchsia-600 text-white py-4 rounded-xl font-bold hover:shadow-lg hover:shadow-violet-200 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-lg"
@@ -64,7 +69,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
         <div className="mt-8 text-center pt-6 border-t border-gray-100">
             <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-                Progress stored locally
+                Version 1.2 • Syncs Automatically
             </p>
         </div>
       </div>
