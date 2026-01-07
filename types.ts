@@ -9,6 +9,12 @@ export enum QuizCategory {
   POSSIBLE_STARTERS = 'Possible Starters'
 }
 
+export enum Difficulty {
+  EASY = 'Easy',
+  MEDIUM = 'Medium (CET Level)',
+  HARD = 'Hard'
+}
+
 export interface Question {
   id: string;
   type: QuizCategory;
@@ -17,6 +23,7 @@ export interface Question {
   options: string[];
   correctAnswer: string;
   explanation: string;
+  hint: string; // New field for gamification
 }
 
 export interface UserProfile {

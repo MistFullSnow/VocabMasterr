@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Dashboard } from './components/Dashboard';
 import { QuizMode } from './components/QuizMode';
 import { LoginScreen } from './components/LoginScreen';
-import { QuizCategory, UserProfile } from './types';
+import { QuizCategory, UserProfile, Difficulty } from './types';
 
 const App: React.FC = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [activeCategory, setActiveCategory] = useState<QuizCategory | null>(null);
+  const [activeDifficulty, setActiveDifficulty] = useState<Difficulty>(Difficulty.MEDIUM);
 
   // Check for existing session on mount
   useEffect(() => {
@@ -27,8 +28,9 @@ const App: React.FC = () => {
     localStorage.removeItem('vocab_master_last_user');
   };
 
-  const handleStartQuiz = (category: QuizCategory) => {
+  const handleStartQuiz = (category: QuizCategory, difficulty: Difficulty) => {
     setActiveCategory(category);
+    setActiveDifficulty(difficulty);
   };
 
   const handleExitQuiz = () => {
@@ -42,7 +44,12 @@ const App: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 text-gray-900 font-sans">
       {activeCategory ? (
-        <QuizMode category={activeCategory} user={user} onExit={handleExitQuiz} />
+        <QuizMode 
+          category={activeCategory} 
+          difficulty={activeDifficulty} 
+          user={user} 
+          onExit={handleExitQuiz} 
+        />
       ) : (
         <Dashboard user={user} onStartQuiz={handleStartQuiz} onLogout={handleLogout} />
       )}
