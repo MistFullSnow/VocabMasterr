@@ -1,6 +1,14 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuizCategory, Question } from "../types";
 
+// Explicitly declare process for this file to fix the "Cannot find name 'process'" error
+// This is required because @types/node is not installed, but we need to access process.env.API_KEY
+declare const process: {
+  env: {
+    API_KEY: string;
+  }
+};
+
 // We initialize lazily to ensure environment variable is ready.
 const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
 
