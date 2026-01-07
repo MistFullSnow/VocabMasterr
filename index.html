@@ -14,7 +14,6 @@
     <style>
       :root {
         --glass-border: rgba(255, 255, 255, 0.1);
-        --glass-bg: rgba(15, 23, 42, 0.6);
         --neon-violet: #8b5cf6;
         --neon-cyan: #22d3ee;
       }
@@ -42,14 +41,14 @@
       /* Aurora Background Blobs */
       .blob {
         position: absolute;
-        filter: blur(90px);
+        filter: blur(80px);
         z-index: -1;
-        opacity: 0.5;
+        opacity: 0.6;
         animation: float-blob 25s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .blob-1 { top: -20%; left: -10%; width: 50vw; height: 50vw; background: #4c1d95; animation-delay: 0s; } /* Deep Violet */
+      .blob-1 { top: -20%; left: -10%; width: 60vw; height: 60vw; background: #4c1d95; animation-delay: 0s; } /* Deep Violet */
       .blob-2 { bottom: -20%; right: -10%; width: 60vw; height: 60vw; background: #0e7490; animation-delay: -5s; } /* Deep Cyan */
-      .blob-3 { top: 30%; left: 30%; width: 40vw; height: 40vw; background: #be185d; animation-delay: -10s; opacity: 0.3; } /* Pink */
+      .blob-3 { top: 40%; left: 40%; width: 45vw; height: 45vw; background: #be185d; animation-delay: -10s; opacity: 0.4; } /* Pink */
 
       @keyframes float-blob {
         0% { transform: translate(0, 0) scale(1); }
@@ -60,17 +59,17 @@
 
       /* Cosmic Glass Card Styling */
       .glass-card {
-        background: rgba(15, 23, 42, 0.4); /* Slate 900 with opacity */
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        background: rgba(15, 23, 42, 0.6); /* Slightly darker for better text contrast */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
       }
       
       .glass-card:hover {
-        background: rgba(30, 41, 59, 0.5);
-        border-color: rgba(255, 255, 255, 0.15);
-        box-shadow: 0 0 25px rgba(139, 92, 246, 0.1);
+        background: rgba(30, 41, 59, 0.7);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
       }
 
       /* Typography adjustments */

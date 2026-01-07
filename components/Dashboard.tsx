@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { QuizCategory, UserProfile, UserStats, CategoryStats, Difficulty } from '../types';
 import { getStats, getCategoryStats, clearData } from '../services/storageService';
 import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
-import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, Sparkles, Zap, Target, Star, Layers } from 'lucide-react';
+import { BookOpen, BrainCircuit, Lightbulb, PenTool, Trash2, Award, TrendingUp, AlertTriangle, ArrowRightLeft, Spline, LogOut, Sparkles, Target, Star, Layers } from 'lucide-react';
 import { LoadingSpinner } from './LoadingSpinner';
 
 interface DashboardProps {
@@ -88,8 +88,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             
             {/* Stats Overview */}
             <div className="grid grid-cols-2 gap-4">
-                <div className="glass-card p-6 rounded-[2rem] animate-in delay-100 flex flex-col justify-between h-40 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-violet-500/20 rounded-full blur-2xl -mr-6 -mt-6 group-hover:bg-violet-500/30 transition-all"></div>
+                <div className="glass-card p-6 rounded-[2rem] animate-in delay-100 flex flex-col justify-between h-40 relative overflow-hidden group hover:border-violet-500/30 transition-colors">
+                    <div className="absolute top-0 right-0 w-20 h-20 bg-violet-500/20 rounded-full blur-2xl -mr-6 -mt-6"></div>
                     <div className="w-10 h-10 rounded-full bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
                         <TrendingUp className="w-5 h-5" />
                     </div>
@@ -98,8 +98,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                         <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-1">Accuracy</p>
                     </div>
                 </div>
-                <div className="glass-card p-6 rounded-[2rem] animate-in delay-200 flex flex-col justify-between h-40 relative overflow-hidden group">
-                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-cyan-500/20 rounded-full blur-2xl -ml-6 -mb-6 group-hover:bg-cyan-500/30 transition-all"></div>
+                <div className="glass-card p-6 rounded-[2rem] animate-in delay-200 flex flex-col justify-between h-40 relative overflow-hidden group hover:border-cyan-500/30 transition-colors">
+                    <div className="absolute bottom-0 left-0 w-20 h-20 bg-cyan-500/20 rounded-full blur-2xl -ml-6 -mb-6"></div>
                     <div className="w-10 h-10 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
                         <Award className="w-5 h-5" />
                     </div>
@@ -114,22 +114,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
             <div className="glass-card p-6 rounded-[2rem] animate-in delay-300">
                 <div className="flex items-center gap-2 mb-6">
                     <Target className="w-5 h-5 text-cyan-400" />
-                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Select Protocol</span>
+                    <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Protocol Level</span>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                     {Object.values(Difficulty).map((diff) => (
                     <button
                         key={diff}
                         onClick={() => setSelectedDifficulty(diff)}
                         className={`w-full p-4 rounded-xl text-left transition-all duration-300 flex items-center justify-between group border ${
                         selectedDifficulty === diff 
-                        ? 'bg-violet-600/20 border-violet-500/50 text-white shadow-[0_0_15px_rgba(139,92,246,0.2)]' 
-                        : 'bg-white/5 border-white/5 hover:bg-white/10 text-slate-400'
+                        ? 'bg-violet-600/20 border-violet-500/50 text-white shadow-[0_0_20px_rgba(139,92,246,0.15)]' 
+                        : 'bg-white/5 border-white/5 hover:bg-white/10 text-slate-400 hover:text-white'
                         }`}
                     >
                         <div>
                             <span className="font-bold text-sm block">{diff.split(' ')[0]}</span>
-                            {diff.includes('CET') && <span className="text-[10px] text-cyan-400 font-mono">CET Standard</span>}
+                            {diff.includes('CET') && <span className="text-[10px] text-cyan-400 font-mono mt-0.5 block opacity-80">CET Standard</span>}
                         </div>
                         {selectedDifficulty === diff && <Star className="w-4 h-4 text-yellow-400 fill-yellow-400 animate-scale-in" />}
                     </button>
@@ -152,13 +152,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
         <div className="lg:col-span-8 space-y-8">
             
             {/* Chart */}
-            <div className="glass-card p-8 rounded-[2rem] animate-in delay-300">
-                <div className="flex items-center justify-between mb-6">
+            <div className="glass-card p-8 rounded-[2rem] animate-in delay-300 relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                <div className="flex items-center justify-between mb-6 relative z-10">
                     <h3 className="font-bold text-white text-lg flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-violet-400" /> Performance Metrics
                     </h3>
                 </div>
-                <div className="h-48 w-full">
+                <div className="h-48 w-full relative z-10">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={catStats} barSize={32}>
                         <XAxis dataKey="category" hide />
@@ -167,7 +168,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                             contentStyle={{ 
                                 borderRadius: '16px', 
                                 border: '1px solid rgba(255,255,255,0.1)', 
-                                backgroundColor: 'rgba(2, 6, 23, 0.9)',
+                                backgroundColor: 'rgba(2, 6, 23, 0.95)',
                                 boxShadow: '0 10px 30px -5px rgba(0,0,0,0.5)',
                                 padding: '12px',
                                 fontFamily: 'Outfit',
@@ -201,16 +202,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onStartQuiz, onLogou
                             <button
                                 key={category}
                                 onClick={() => onStartQuiz(category, selectedDifficulty)}
-                                className="glass-card p-5 rounded-[1.5rem] text-left transition-all hover:-translate-y-1 flex flex-col justify-between h-40 group animate-in"
+                                className="glass-card p-5 rounded-[1.5rem] text-left transition-all hover:-translate-y-1 flex flex-col justify-between h-40 group animate-in relative overflow-hidden"
                                 style={{ animationDelay: `${400 + (idx * 50)}ms` }}
                             >
-                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all">
+                                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 group-hover:text-cyan-400 group-hover:border-cyan-500/30 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.2)] transition-all relative z-10">
                                     {getCategoryIcon(category)}
                                 </div>
                                 
-                                <div>
-                                    <h4 className="font-bold text-slate-200 text-sm leading-tight mb-1 group-hover:text-white transition-colors">{category}</h4>
-                                    <span className="text-[10px] font-semibold text-slate-500 bg-white/5 px-2 py-0.5 rounded-full group-hover:text-cyan-400 transition-colors">
+                                <div className="relative z-10">
+                                    <h4 className="font-bold text-slate-200 text-sm leading-tight mb-2 group-hover:text-white transition-colors">{category}</h4>
+                                    <span className="text-[10px] font-semibold text-slate-500 bg-white/5 px-2 py-1 rounded-lg group-hover:text-cyan-300 group-hover:bg-cyan-900/20 transition-colors">
                                         {attempts} runs
                                     </span>
                                 </div>
